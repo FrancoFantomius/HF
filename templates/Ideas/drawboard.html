@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideas | {{ file.name }}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'img/HFLogo.svg') }}" type="image/x-icon">
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+        background-image: url({{ url_for('static', filename = 'img/HFIdeasLogo.svg') }});
+      }
+    </style>
+    <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/@excalidraw/excalidraw/dist/excalidraw.development.js"
+    ></script>
+    <!--script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script-->
+  </head>
+  <body>
+    <div class="container">
+      <div id="app"></div>
+    </div>
+    <script>
+      const AutosaveURL = "{{ url_for('api.ideas.edit.Upload', file_id = file.id ) }}"
+      const LoadURL = "{{ url_for('api.ideas.edit.Download', file_id  = file.id) }}"
+      const FileId = "{{ file.id }}"
+    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/Ideas/drawboard.js') }}"></script>
+  </body>
+</html>

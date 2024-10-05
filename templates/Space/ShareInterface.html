@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spaces | Shared</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/HFLogo.svg') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Space/interface.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Space/overlay.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Space/preview.css') }}">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="hamburger-menu" id="hamburger-menu">
+            <span>&#9776;</span>
+        </div>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/HFSpacesLogo.svg') }}" alt="Site Logo">
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="Search...">
+            <button class="search-btn">
+                <img src="{{ url_for('static', filename='icons/search.svg') }}" alt="Search">
+            </button>
+        </div>
+        <div class="user-logo" id="user-logo">
+            <img src="{{ url_for('static', filename='icons/person-fill.svg') }}" alt="User Logo">
+            <div class="user-menu" id="user-menu">
+                <ul>
+                    <li><h3>{{ current_user.username }}</h3></li>
+                    <li>{{ current_user.email }}</li>
+                    <li onclick="window.location ={{ url_for('auth.logout') }}">Logout</li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <nav class="side-menu" id="side-menu">
+        <ul>
+            <li onclick="window.location ='{{ url_for('space.index') }}'">
+
+                Home
+            </li>
+            <li onclick="window.location ='{{ url_for('space.SharedView') }}'">
+                <img src="{{ url_for('static', filename='icons/share-fill.svg') }}" alt=""> 
+                <b>Shared</b>
+            </li>
+            <li onclick="window.location ='{{ url_for('space.TrashcanView') }}'">
+                <img src="{{ url_for('static', filename='icons/trash3-fill.svg') }}" alt="">
+                Trashcan
+            </li>
+            <hr>
+            <li id="search-button" class="hidden">
+                <img src="{{ url_for('static', filename='icons/search.svg') }}" alt="">
+                Search
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            
+        </div>
+    </div>
+
+    <!-- File Preview -->
+    <div class="preview" id="preview" onclick = "showPreview(false)">
+        <header id="preview-title">
+        </header>
+        <button id="preview-download">
+            <img src="{{ url_for('static', filename = 'icons/download.svg') }}" alt="download">
+        </button>
+        <button id="close-preview" onclick = "showPreview(false)">
+            <img src="{{ url_for('static', filename = 'icons/x.svg') }}" alt="X">
+        </button>
+        <div class="preview-content" id="preview-content">
+            
+        </div>
+    </div>
+    
+    <!-- Error Messages -->
+    <div id="error-box" class="errors" style="display: none;">
+    </div>
+    
+    <!-- Notification Messages -->
+    <div id="allert-box" class="allerts" style="display: none;">
+    </div>
+
+    <main class="content" style="flex: 1" id="grid-container">
+        <!-- Grid Layout for Rectangles -->
+        <div id = 'file-view' class="grid-container">
+        <!-- To edit see driveEngine.js -->
+        </div>
+    </main>
+    
+    <script>
+        
+        // Assets
+        const UploadIcon = "{{ url_for('static', filename = 'icons/cloud-upload-fill.svg') }}"
+        const CloseButtonIcon = "{{ url_for('static', filename = 'icons/x.svg') }}"
+
+        const FolderIcon = "{{ url_for('static', filename = 'icons/folder-fill.svg') }}";
+        const FileIconGen = "{{ url_for('static', filename = 'icons/file-icon-generic.svg') }}";
+        const FileIconDoc = "{{ url_for('static', filename = 'icons/file-icon-docs.svg') }}";
+        const FileIconSheet = "{{ url_for('static', filename = 'icons/file-icon-sheets.svg') }}";
+        const FileIconSlide = "{{ url_for('static', filename = 'icons/file-icon-slides.svg') }}";
+        const FileIconImage = "{{ url_for('static', filename = 'icons/file-icon-image.svg') }}";
+        const FileIconVideo = "{{ url_for('static', filename = 'icons/file-icon-video.svg') }}";
+        const FileIconPdf = "{{ url_for('static', filename = 'icons/file-icon-pdf.svg') }}";
+
+
+        const MenuIconOpen = "{{ url_for('static', filename = 'icons/arrow-up-right-square-fill.svg') }}";
+        const MenuIconView = "{{ url_for('static', filename = 'icons/eye-fill.svg') }}";
+        const MenuIconMove = "{{ url_for('static', filename = 'icons/box-seam-fill.svg') }}";
+        const MenuIconEdit = "{{ url_for('static', filename = 'icons/pencil-square.svg') }}";
+        const MenuIconDownload = "{{ url_for('static', filename = 'icons/download.svg') }}";
+        const MenuIconShare = "{{ url_for('static', filename = 'icons/share-fill.svg') }}";
+        const MenuIconInfo = "{{ url_for('static', filename = 'icons/info-circle-fill.svg') }}";
+        const MenuIconDelete = "{{ url_for('static', filename = 'icons/trash3-fill.svg') }}";
+
+        const MenuIconLink = "{{ url_for('static', filename = 'icons/link.svg') }}";
+        const MenuIconEmail = "{{ url_for('static', filename = 'icons/envelope-fill.svg') }}"
+        const MenuIconClose = "{{ url_for('static', filename = 'icons/x.svg') }}";
+
+        // API URLs
+        const ViewFileURL = "{{ url_for('space.FileView', file_id='') }}"
+        const ViewFolderURL = "{{ url_for('space.FolderView', folder_id='') }}"
+        const ViewContentURL = "{{ url_for('api.space.info.viewContentShareFolder') }}";
+        const InfoFolderURL = "{{ url_for('api.space.info.infoFolder') }}";
+        const InfoFileURL = "{{ url_for('api.space.info.infoFile') }}";
+        const UploadURL = "{{ url_for('api.space.edit.SpaceUpload') }}";
+        const NewFolderURL = "{{ url_for('api.space.edit.newFolder') }}";
+        const RenameURL = "{{ url_for('api.space.edit.rename') }}"
+        const MoveURL = "{{ url_for('api.space.edit.move') }}"
+        const DeleteFolderURL = "{{ url_for('api.space.trash.deleteFolder') }}";
+        const DeleteFileURL = "{{ url_for('api.space.trash.deleteFile') }}";
+        const ShareEmailURL = "{{ url_for('api.space.share.shareEmail') }}";
+        const ShareLinkURL = "{{ url_for('api.space.share.shareLink') }}";
+        const ShareInfoURL = "{{ url_for('api.space.share.infoShare') }}"
+        const ShareDeleteURL = "{{ url_for('api.space.share.deleteShare') }}"
+        const previewImgURL = "{{ url_for('api.space.preview.previewImage', file_id = '') }}";
+        const previewDocURL = "{{ url_for('api.space.preview.previewDoc', file_id = '') }}";
+        const previewPdfURL = "{{ url_for('api.space.preview.previewPdf', file_id = '', page_nmb = '') }}".replace(/\/{2,}/g, '/');
+        const previewSheetsURL = "{{ url_for('api.space.preview.previewSheet', file_id = '', sheet_nmb = '') }}".replace(/\/{2,}/g, '/');
+        const previewSlidesURL = "{{ url_for('api.space.preview.previewSlide', file_id = '', slide_nmb = '') }}".replace(/\/{2,}/g, '/');
+
+
+        const searchURL = "{{ url_for('api.space.search.searchFiles') }}";
+
+        const BaseSharingLinkURL = "{{ url_for('space.ShareLink', sharelink = '') }}"
+    </script>
+
+
+    <script src="{{ url_for('static', filename='js/Space/ShareApi.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Space/ShareEngine.js') }}"></script>
+</body>
+</html>

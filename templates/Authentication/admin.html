@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/HFLogo.svg') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Space/interface.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Account/admin.css') }}">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="hamburger-menu" id="hamburger-menu">
+            <span>&#9776;</span>
+        </div>
+        <div class="logo" style="margin-right: 10px;">
+            <img src="{{ url_for('static', filename='img/HFAccountLogo.svg') }}" alt="Site Logo">
+        </div>
+        <div class="user-logo" id="user-logo">
+            <img src="{{ url_for('static', filename='icons/person-fill.svg') }}" alt="User Logo">
+            <div class="user-menu" id="user-menu">
+                <ul>
+                    <li>
+                        <h3>{{ current_user.username }}</h3>
+                    </li>
+                    <li onclick="window.location='mailto:{{ current_user.email }}'">
+                        <img src="{{ url_for('static', filename='icons/envelope-fill.svg') }}" alt="">
+                        {{ current_user.email }}
+                    </li>
+                    <li onclick="window.location.href ={{ url_for('auth.logout') }}">
+                        <img src="{{ url_for('static', filename='icons/box-arrow-right.svg') }}" alt="">
+                        Logout
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+
+    <p>Users:</p>
+
+    <div class="accounts">
+
+        {% for user in users %}
+
+        <div class="user">
+            <img src="app.icon" alt="Logo">
+            <h3>{{ user.username }}</h3>
+            <h5>{{ user.email }}</h5>
+
+            <p>Space utilized:</p>
+
+            <div class="progress-bar">
+                <div class="occupied-bar" style="width: {{ user.used_space/(user.max_space*1000) }}%;">
+                </div>
+            </div>
+
+            <button class="edit-space">
+                <img src="{{ url_for('static', filename = 'icons/pencil-fill.svg') }}" alt="">
+            </button>
+
+
+        </div>
+        
+        {% endfor %}
+
+    </div>
+
+
+</body>

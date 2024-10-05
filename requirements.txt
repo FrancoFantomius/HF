@@ -1,0 +1,14 @@
+Flask
+Flask-Login
+Flask-SQLAlchemy
+Flask-APScheduler
+Flask-Cors
+Werkzeug
+Pillow
+PyMuPDF
+python-docx
+python-pptx
+matplotlib
+openpyxl
+pandas
+chardet

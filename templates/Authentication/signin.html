@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account | Sign in</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'img/HFLogo.svg') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/Account/signup.css') }}">
+</head>
+<body>
+    <div class="centered-div">
+        <img src="{{ url_for('static', filename = 'img/HFAccountLogo.svg') }}" alt="" class="logo">
+        <br>
+        <form id = "form" action="{{ url_for('auth.login') }}" method="post">
+            Email 
+            <br>
+            <input type="email" name="email" id="email" placeholder="Email" required>
+            <br>
+            Password
+            <br>
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <br>
+        </form>
+
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <div class="final-row">
+            <button class="primary" id="signin">
+                Sign in
+            </button>
+
+            <button class="secondary" id="signup">
+                Sign up
+            </button>
+        </div>    
+    </div>
+
+    <script src="{{ url_for('static', filename = 'js/Account/engine.js') }}"></script>
+    <script>
+        const SignInURL = "{{ url_for('auth.login') }}";
+        const SignUpURL = "{{ url_for('auth.register') }}";
+    </script>
+
+</body>
+</html>

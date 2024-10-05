@@ -1,0 +1,29 @@
+body{
+    margin-left: 0px;
+}
+
+.account-main {
+    text-align: center;
+    margin-top: 150px;
+}
+
+.account-icon {
+    width: 100%;
+}
+
+.account-icon img {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    background: #3e3e3e;
+}
+
+.apps{
+    flex: 1; /* Allows the container to grow and fill available space */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px;
+    padding: 20px;
+    overflow: visible; /* Allows scrolling if content exceeds container size */
+}
+

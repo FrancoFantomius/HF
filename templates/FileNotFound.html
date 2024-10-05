@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'img/HFLogo.svg') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/FileNotFound.css') }}">
+    <title>File not found</title>
+</head>
+<body>
+    <div class="centered-div">
+        <img src="{{ url_for('static', filename = 'img/HF___Logo.svg') }}" alt="" class="logo">
+        <button onclick="window.location.href = {{ url_for('space.index') }}">
+            Back to Home Folder
+        </button>
+    </div>
+
+</body>
+</html>

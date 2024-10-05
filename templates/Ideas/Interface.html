@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideas | Home</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/HFLogo.svg') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Space/interface.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Space/overlay.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Space/preview.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Ideas/interface.css') }}">
+
+</head>
+<body>
+    <header class="top-bar">
+        <div class="hamburger-menu" id="hamburger-menu">
+            <span>&#9776;</span>
+        </div>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/HFIdeasLogo.svg') }}" alt="Site Logo">
+        </div>
+        <div class="search-container">
+            <input type="text" id = "SearchBox" placeholder="Search...">
+            <button class="search-btn" onclick="Search()">
+                <img src="{{ url_for('static', filename='icons/search.svg') }}" alt="Search">
+            </button>
+        </div>
+        <div class="user-logo" id="user-logo">
+            <img src="{{ url_for('static', filename='icons/person-fill.svg') }}" alt="User Logo">
+            <div class="user-menu" id="user-menu">
+                <ul>
+                    <li>
+                        <h3>{{ current_user.username }}</h3>
+                    </li>
+                    <li onclick="window.location='mailto:{{ current_user.email }}'">
+                        <img src="{{ url_for('static', filename='icons/envelope-fill.svg') }}" alt="">
+                        {{ current_user.email }}
+                    </li>
+                    <li onclick="window.location.href ={{ url_for('auth.logout') }}">
+                        <img src="{{ url_for('static', filename='icons/box-arrow-right.svg') }}" alt="">
+                        Logout
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <nav class="side-menu" id="side-menu">
+        <ul>
+            <li onclick="window.location ='{{ url_for('ideas.index') }}'">
+                <img src="{{ url_for('static', filename='icons/house-door-fill.svg') }}" alt="">
+                Home
+            </li>
+            <li onclick="window.location ='{{ url_for('space.SharedView') }}'">
+                <img src="{{ url_for('static', filename='icons/share-fill.svg') }}" alt=""> 
+                Shared
+            </li>
+            <li>
+                <img src="{{ url_for('static', filename='icons/archive-fill.svg') }}" alt="">
+                Archived
+            </li>
+            <li onclick="window.location ='{{ url_for('space.TrashcanView') }}'">
+                <img src="{{ url_for('static', filename='icons/trash3-fill.svg') }}" alt="">
+                Trashcan
+            </li>
+            <hr>
+            <li onclick=NewFolder()>
+                <img src="{{ url_for('static', filename = 'icons/journal-plus.svg') }}" alt="">
+                New Note
+            </li>
+            <!--li>
+                <img src="{{ url_for('static', filename='icons/file-earmark-richtext.svg') }}" alt="">
+                New Document
+            </li>
+            <li>
+                <img src="{{ url_for('static', filename='icons/file-earmark-bar-graph-fill.svg') }}" alt=""> DA AGGIUNGERE
+                New Sheet
+            </li-->
+            <li id="search-button" class="hidden">
+                <img src="{{ url_for('static', filename='icons/search.svg') }}" alt="">
+                Search
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            
+        </div>
+    </div>
+
+    <!-- Error Messages -->
+    <div id="error-box" class="errors" style="display: none;">
+    </div>
+    
+    <!-- Notification Messages -->
+    <div id="allert-box" class="allerts" style="display: none;">
+    </div>
+
+    <main class="content" style="flex: 1" id="grid-container">
+        <!-- Grid Layout for Rectangles -->
+        <div id = 'file-view' class="grid-container">
+        <!-- To edit see driveEngine.js -->
+        </div>
+    </main>
+    
+    <button class="newNote" onclick="window.location = 'REPLACE ME'">
+        <img src="{{ url_for('static', filename = 'icons/journal-plus.svg') }}" alt="">
+        New Note
+    </button>
+
+    <script>
+        // Assets
+        const UploadIcon = "{{ url_for('static', filename = 'icons/cloud-upload-fill.svg') }}"
+        const CloseButtonIcon = "{{ url_for('static', filename = 'icons/x.svg') }}"
+
+        const FileIconNote = "{{ url_for('static', filename = 'icons/file-icon-note.svg') }}";
+
+        const MenuIconOpen = "{{ url_for('static', filename = 'icons/arrow-up-right-square-fill.svg') }}";
+        const MenuIconView = "{{ url_for('static', filename = 'icons/eye-fill.svg') }}";
+        const MenuIconEdit = "{{ url_for('static', filename = 'icons/pencil-square.svg') }}";
+        const MenuIconDownload = "{{ url_for('static', filename = 'icons/download.svg') }}";
+        const MenuIconShare = "{{ url_for('static', filename = 'icons/share-fill.svg') }}";
+        const MenuIconInfo = "{{ url_for('static', filename = 'icons/info-circle-fill.svg') }}";
+        const MenuIconDelete = "{{ url_for('static', filename = 'icons/trash3-fill.svg') }}";
+
+        const MenuIconLink = "{{ url_for('static', filename = 'icons/link.svg') }}";
+        const MenuIconEmail = "{{ url_for('static', filename = 'icons/envelope-fill.svg') }}"
+        const MenuIconClose = "{{ url_for('static', filename = 'icons/x.svg') }}";
+
+        // API URLs
+        const DownloadFileURL = "{{ url_for('space.FileView', file_id='') }}"
+        const ViewContentURL = "{{ url_for('api.ideas.info.viewNotes') }}";
+        const InfoFileURL = "{{ url_for('api.space.info.infoFile') }}";
+        const RenameURL = "{{ url_for('api.space.edit.rename') }}"
+        const MoveURL = "{{ url_for('api.space.edit.move') }}"
+        const DeleteFileURL = "{{ url_for('api.space.trash.deleteFile') }}";
+        const ShareEmailURL = "{{ url_for('api.space.share.shareEmail') }}";
+        const ShareLinkURL = "{{ url_for('api.space.share.shareLink') }}";
+        const ShareInfoURL = "{{ url_for('api.space.share.infoShare') }}";
+        const ShareDeleteURL = "{{ url_for('api.space.share.deleteShare') }}";
+
+        const searchURL = "{{ url_for('api.ideas.search.searchFiles') }}";
+
+        const BaseSharingLinkURL = "{{ url_for('space.ShareLink', sharelink = '') }}";
+    </script>
+
+    <script src="{{ url_for('static', filename='js/Ideas/Api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Ideas/Engine.js') }}"></script>
+</body>
+</html>

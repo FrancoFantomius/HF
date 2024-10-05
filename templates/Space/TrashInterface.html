@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spaces | Trashcan</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/HFLogo.svg') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Space/interface.css') }}">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="hamburger-menu" id="hamburger-menu">
+            <span>&#9776;</span>
+        </div>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/HFDriveLogo.svg') }}" alt="Site Logo">
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="Search...">
+            <button class="search-btn">
+                <img src="{{ url_for('static', filename='icons/search.svg') }}" alt="Search">
+            </button>
+        </div>
+        <div class="user-logo" id="user-logo">
+            <img src="{{ url_for('static', filename='icons/person-fill.svg') }}" alt="User Logo">
+            <div class="user-menu" id="user-menu">
+                <ul>
+                    <li><h3>{{ current_user.username }}</h3></li>
+                    <li>{{ current_user.email }}</li>
+                    <li onclick="window.location ='{{ url_for('auth.logout') }}'">Logout</li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <nav class="side-menu" id="side-menu">
+        <ul>
+            <li onclick="window.location ='{{ url_for('space.index') }}'">
+
+                Home
+            </li>
+            <li onclick="window.location ='{{ url_for('space.SharedView') }}'">
+                <img src="{{ url_for('static', filename='icons/share-fill.svg') }}" alt=""> 
+                Shared
+            </li>
+            <li onclick="window.location ='{{ url_for('space.TrashcanView') }}'">
+                <img src="{{ url_for('static', filename='icons/trash3-fill.svg') }}" alt="">
+                <b>Trashcan</b>
+            </li>
+            <hr>
+            <li id="search-button" class="hidden">
+                <img src="{{ url_for('static', filename='icons/search.svg') }}" alt="">
+                Search
+            </li>
+            <li id="empty-trash">
+                <img src="{{ url_for('static', filename='icons/trash3-empty.svg') }}" alt="">
+                Empty Trash
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            
+        </div>
+    </div>
+    
+    <main class="content" style="flex: 1" id="grid-container">
+        <!-- Grid Layout for Rectangles -->
+        <div class="grid-container">
+
+            <!-- Grid items -->
+
+            {% for subfolder in subfolders %}
+
+            <div class="grid-item">
+                <img src="{{ url_for('static', filename='icons/folder-fill.svg') }}" alt="" onclick="window.location ='{{ url_for('space.FolderView', folder_id=subfolder.id) }}'">
+                <div class="text">{{ subfolder.name }}</div>
+                <div class="menu-container">
+                    <button class="dots-menu-btn">⋮</button>
+                    <div class="menu">
+                        <ul>
+                            <li onclick="restoreFolderApi('{{ subfolder.old_id }}">
+                                <img src="{{ url_for('static', filename='icons/arrow-up-right-square-fill.svg') }}">
+                                Restore
+                            </li>
+                            <li onclick="infoFolderApi( '{{ subfolder.old_id }}' )">
+                                <img src="{{ url_for('static', filename='icons/info-circle-fill.svg') }}">
+                                Details
+                            </li>
+                            <li onclick="deleteFolderApi( '{{ subfolder.old_id }}' )">
+                                <img src="{{ url_for('static', filename='icons/trash3-fill.svg') }}">
+                                Delete
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+            {% for file in files %}
+
+            <div class="grid-item">
+                <img src="{{ url_for('static', filename='icons/file-icon-generic.svg') }}" alt="" onclick="window.location = '{{ url_for('space.FileView', file_id=file.id) }}'">
+                <div class="text">{{ file.name }}</div>
+                <div class="menu-container">
+                    <button class="dots-menu-btn">⋮</button>
+                    <div class="menu">
+                        <ul>
+                            <li onclick="restoreFileApi('{{ file.old_id }}')">
+                                <img src="{{ url_for('static', filename='icons/arrow-up-right-square-fill.svg') }}">
+                                Restore
+                            </li>
+                            <li onclick="infoFileApi( '{{ file.old_id }}' )">
+                                <img src="{{ url_for('static', filename='icons/info-circle-fill.svg') }}">
+                                Details
+                            </li>
+                            <li onclick="deleteFileApi( '{{ file.old_id }}' )">
+                                <img src="{{ url_for('static', filename='icons/trash3-fill.svg') }}">
+                                Delete
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+
+            <!-- End Grid items -->
+        </div>
+    </main>
+    
+    <script>
+        const InfoFolderURL = "{{ url_for('api.space.info.infoFolder') }}";
+        const InfoFileURL = "{{ url_for('api.space.info.infoFile') }}";
+        const RestoreFolderURL = "{{ url_for('api.space.trash.restoreFolder') }}";
+        const RestoreFileURL = "{{ url_for('api.space.trash.restoreFile') }}";
+        const DeleteFileURL = "{{ url_for('api.space.trash.deleteTrashedFile') }}";
+        const DeleteFolderURL = "{{ url_for('api.space.trash.deleteTrashedFolder') }}";
+        const EmptyTrashURL = "{{ url_for('api.space.trash.emptyTrash') }}"
+    </script>
+
+    <script src="{{ url_for('static', filename='js/space/TrashApi.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/space/Engine.js') }}"></script>
+</body>
+</html>

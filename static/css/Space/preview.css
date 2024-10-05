@@ -1,0 +1,115 @@
+.preview{
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Make sure it is on top */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.preview header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    font-size: large;
+    background: #444444;
+    color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.preview header img {
+    margin-right: 10px;
+    background: #f0f0f0;
+    padding: 4px;
+    border-radius: 2px;
+}
+
+.preview button {
+    position: fixed;
+    top: 1px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 10px;
+    filter: invert(100%);
+}
+
+.preview button:hover {
+    background-color: rgba(128, 128, 128, 0.3);
+}
+
+#preview-download {
+    right: 50px;
+}
+
+#close-preview {
+    right: 10px;
+}
+
+.preview-content {
+    display: flex;
+    flex-direction: column; /* Stack images vertically */
+    justify-content: flex-start;
+    align-items: center;
+    height: calc(100vh); /* Adjusting for header height */
+    width: 100%;
+    padding-top: 70px; /* Create space for the header */
+    padding-bottom: 0px;
+    overflow-y: auto; /* Enable vertical scrolling */
+    box-sizing: border-box; /* Make sure padding is included in the height calculation */
+}
+
+.preview-content img {
+    max-width: 100%;
+    margin-bottom: 20px; /* Spacing between images */
+}
+
+
+/* Optional: Customize scrollbar appearance */
+.preview-content::-webkit-scrollbar {
+    width: 20px;
+}
+
+.preview-content::-webkit-scrollbar-thumb {
+    background: #b5b5b5; 
+}
+
+/* Track */
+.preview-content::-webkit-scrollbar-track {
+    background: #888;
+}
+
+/* Handle on hover */
+.preview-content::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+.preview-content .placeholder {
+    background-color: lightgrey;
+    width: 55%;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 18px;
+}
+
+.preview-content .placeholder img{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}

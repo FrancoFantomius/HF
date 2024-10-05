@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/HFLogo.svg') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Space/interface.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Account/index.css') }}">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="hamburger-menu" id="hamburger-menu">
+            <span>&#9776;</span>
+        </div>
+        <div class="logo" style="margin-right: 10px;">
+            <img src="{{ url_for('static', filename='img/HFAccountLogo.svg') }}" alt="Site Logo">
+        </div>
+        <div class="user-logo" id="user-logo">
+            <img src="{{ url_for('static', filename='icons/person-fill.svg') }}" alt="User Logo">
+            <div class="user-menu" id="user-menu">
+                <ul>
+                    <li>
+                        <h3>{{ current_user.username }}</h3>
+                    </li>
+                    <li onclick="window.location='mailto:{{ current_user.email }}'">
+                        <img src="{{ url_for('static', filename='icons/envelope-fill.svg') }}" alt="">
+                        {{ current_user.email }}
+                    </li>
+                    <li onclick="window.location.href ={{ url_for('auth.logout') }}">
+                        <img src="{{ url_for('static', filename='icons/box-arrow-right.svg') }}" alt="">
+                        Logout
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="account-main">
+        <div class="account-icon" id="account-icon">
+            <img src="/adwwed/awdeawed" alt="">
+        </div>
+        <br>
+        <h2>
+            {{ current_user.username }}
+        </h2>
+    </div>
+
+    Available apps:
+
+    <div class="apps">
+        
+        <div class="app">
+            <img src="app.icon" alt="Logo">
+            <h3>Spaces</h3>
+            <h5>Upload and share your files</h5>
+
+        </div>
+        
+    </div>
+
+
+</body>

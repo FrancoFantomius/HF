@@ -1,0 +1,416 @@
+:root {
+    /* Define color variables */
+    --primary-bg-color: #f8fafd;
+    --secondary-bg-color: #e7e8eb;
+    --text-color: #1f1f1f;
+    --hover-bg-color: #eee;
+    --icon-color: black;
+    --grid-bg-color: #f0f0f0;
+    --grid-text-color: #333;
+    --divider-color: #666;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body{
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin-left: 250px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+img {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Top Bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-bg-color);
+    padding: 10px 20px;
+    color: var(--text-color);
+    position: fixed;
+    top: 0;
+    left: 0px;
+    right: 0;
+    z-index: 1000;
+}
+
+.logo{
+    width: 250px;
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+}
+
+.hamburger-menu {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.search-container {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 20px;
+    position: relative;
+    margin-left: 0px;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 8px 40px 8px 12px;
+    border: 2px solid #c6c7ca;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.search-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.user-logo {
+    position: relative;
+    cursor: pointer;
+}
+
+.user-logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    padding: 10px;
+    color: black;
+}
+
+.user-menu ul {
+    list-style-type: none;
+}
+
+.user-menu ul li {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.user-menu ul li:hover {
+    background-color: var(--hover-bg-color);
+}
+
+.user-menu ul li img {
+    border-radius: 0;
+    width: 20px;
+    height: auto;
+    margin-right: 10px;
+}
+
+/* Side Menu */
+.side-menu {
+    width: 250px;
+    background-color: var(--primary-bg-color);
+    position: fixed;
+    top: 50px;
+    left: 0;
+    height: 100%;
+    padding-top: 60px;
+    z-index: 999;
+    color: var(--text-color);
+    transition: 0.3s;
+}
+
+.side-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.side-menu ul li {
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s, border-radius 0.3s;
+}
+
+.side-menu ul li img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.side-menu ul li:hover {
+    background-color: var(--secondary-bg-color);
+    border-radius: 24px;
+}
+
+.side-menu hr {
+    margin: 10px 25px;
+    border-color: var(--divider-color);
+}
+
+/* Content Grid */
+.content {
+    margin-top: 70px;
+    padding: 20px;
+    flex: 1;
+    border-radius: 35px;
+}
+
+.grid-container {
+    flex: 1; /* Allows the container to grow and fill available space */
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    overflow: visible; /* Allows scrolling if content exceeds container size */
+}
+
+.content.dragging {
+    background-color: #7abffa; /* Change background color when dragging over */
+    border: 3px solid #004cff;
+}
+
+.drop-message {
+    position: absolute;
+    bottom: 20px; /* Position the message 20px from the bottom of the container */
+    right: 20px; /* Position the message 20px from the right of the container */
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background for visibility */
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    display: none; /* Hide by default */
+    z-index: 10;
+}
+
+.content.dragging .drop-message {
+    display: block; /* Show the message when dragging */
+}
+
+.grid-item {
+    background-color: var(--grid-bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    text-align: left;
+    font-size: 24px;
+    color: var(--grid-text-color);
+    position: relative; /* Ensure the .menu-container is positioned relative to the grid item */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for better visibility */
+    cursor: pointer;
+}
+
+.grid-item img {
+    width: 100%;
+    max-height: 75%; /* Ensures the image does not exceed 75% of the height of the grid item */
+    object-fit: fill;
+    border-radius: 10px; /* Optional: Match the border radius for consistency */
+}
+
+.grid-item .text {
+    flex: 1;
+    font-size: large;
+    align-items: left;
+    justify-content: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; /* This will show "..." when the text is too long */
+    padding: 10px;
+}
+
+/* Handles the Menu */
+.menu-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: none; /* Hide by default */
+}
+
+.grid-item:hover .menu-container {
+    display: block; /* Show when hovered */
+}
+
+.dots-menu-btn {
+    background: transparent;
+    border: none;
+    color: black; /* Make dots black */
+    font-weight: bolder;
+    font-size: 24px;
+    cursor: pointer;
+    outline: none;
+}
+
+.menu {
+    display: none; /* Hide the menu by default */
+    position: absolute;
+    /*top: 0; /* Align the top of the menu with the button */
+    /*left: 100%; /* Place the top-left corner to the right of the button */
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    padding: 5px; /* Adjust padding for the menu */
+    z-index: 10; /* Ensure the menu appears above other elements */
+    
+}
+
+.menu.left {
+    left: auto;
+    right: 100%; /* Move to the left of the button */
+}
+
+.menu.top {
+    top: auto;
+    bottom: 100%; /* Move above the button */
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu ul li {
+    padding: 8px 10px; /* Adjust padding for menu items */
+    cursor: pointer;
+    color: var(--grid-text-color);
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.menu ul li img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 0;
+}
+
+.menu ul li:hover {
+    background-color: var(--hover-bg-color);
+}
+
+.dots-menu-btn:focus + .menu,
+.menu:hover {
+    display: block; /* Show the menu when dots are clicked or menu is hovered */
+}
+
+/* Hidden Search Button */
+.hidden {
+    display: none;
+}
+
+
+.errors{
+    position: absolute;
+    padding: 10px;
+    min-width: 250px;
+    background: #ff0000;
+    color: #ffc8c8;
+    border-radius: 10px;
+    bottom: 15px;
+    z-index: 700;
+    /*transform: translateX(-50%);*/
+    left: 0px;
+    transition: left 1s ease-in-out;
+}
+
+.allerts{
+    position: absolute;
+    padding: 10px;
+    min-width: 250px;
+    background: #00bbff;
+    color: #001117;
+    border-radius: 10px;
+    bottom: 15px;
+    z-index: 700;
+    /*transform: translateX(-50%);*/
+    left: 0px;
+    transition: left 1s ease-in-out;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        margin-left: 0;
+    }
+
+    .side-menu {
+        left: -250px;
+    }
+
+    .side-menu.active {
+        left: 0;
+    }
+
+    .top-bar {
+        left: 0;
+    }
+
+    .hamburger-menu {
+        display: block;
+    }
+
+    .search-container {
+        display: none;
+    }
+
+    #search-button {
+        display: block;
+    }
+
+    /* Grid for smaller screens */
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    .errors {
+        display: none;
+    }
+    
+    .allerts{
+        display: none;
+    }
+}
